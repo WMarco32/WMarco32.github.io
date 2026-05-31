@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kiri — SSM Engineering</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black:  #0a0a0a;
+      --dark:   #111111;
+      --card:   #161616;
+      --border: #222222;
+      --brass:  #b8974a;
+      --brass2: #d4b265;
+      --white:  #f0f0f0;
+      --grey:   #888888;
+      --light:  #cccccc;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(184,151,74,0.15);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.15em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--brass); }
+
+    nav ul { list-style: none; display: flex; gap: 2.5rem; }
+
+    nav ul a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover { color: var(--brass); }
+
+    /* PAGE HERO */
+    .page-hero {
+      padding: 12rem 4rem 6rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero::before {
+      content: 'KIRI';
+      position: absolute;
+      right: -1rem;
+      bottom: -2rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 25vw;
+      color: rgba(255,255,255,0.02);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .breadcrumb {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 2rem;
+    }
+
+    .breadcrumb a { color: var(--brass); text-decoration: none; }
+
+    .page-hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 8vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .page-hero .subtitle {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 2rem;
+    }
+
+    .page-hero p {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--light);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #4ade80;
+      background: rgba(74,222,128,0.1);
+      border: 1px solid rgba(74,222,128,0.2);
+      padding: 0.5rem 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* SPECS BAR */
+    .specs-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .spec-item {
+      padding: 2rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .spec-item:last-child { border-right: none; }
+
+    .spec-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--brass);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .spec-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    /* CONTENT */
+    .content-section {
+      padding: 6rem 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: var(--brass);
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 4vw, 4rem);
+      letter-spacing: 0.03em;
+      line-height: 1;
+      margin-bottom: 3rem;
+    }
+
+    /* ITERATIONS TIMELINE */
+    .iterations {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .iteration-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      align-items: start;
+      gap: 3rem;
+      padding: 2.5rem;
+      transition: border-color 0.3s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .iteration-card:hover { border-color: var(--brass); }
+
+    .iteration-version {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: var(--brass);
+      line-height: 1;
+    }
+
+    .iteration-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .iteration-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--grey);
+      line-height: 1.6;
+    }
+
+    .iteration-rating {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      color: var(--grey);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .iteration-rating span { color: var(--brass); }
+
+    .iteration-tag {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .tag-complete { background: rgba(184,151,74,0.15); color: var(--brass); }
+    .tag-active { background: rgba(74,222,128,0.1); color: #4ade80; }
+
+    .report-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brass);
+      text-decoration: none;
+      margin-top: 1rem;
+      border: 1px solid rgba(184,151,74,0.3);
+      padding: 0.4rem 0.8rem;
+      transition: background 0.2s;
+    }
+
+    .report-link:hover { background: rgba(184,151,74,0.1); }
+
+    /* PARAMS TABLE */
+    .params-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .param-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 2rem;
+    }
+
+    .param-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 0.5rem;
+    }
+
+    .param-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      color: var(--brass);
+      line-height: 1;
+    }
+
+    .param-unit {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      color: var(--grey);
+      margin-left: 0.3rem;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .footer-logo span { color: var(--brass); }
+
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+
+    .footer-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--brass); }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--border);
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.1em;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">SSM<span>.</span></a>
+    <ul>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="index.html#roadmap">Roadmap</a></li>
+      <li><a href="kiri.html">Kiri</a></li>
+      <li><a href="rata.html">RATA</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="breadcrumb"><a href="index.html">SSM Engineering</a> / Projects / Kiri</div>
+    <div class="status-badge"><span class="status-dot"></span> Active Development</div>
+    <h1>Kiri</h1>
+    <div class="subtitle">Custom Wankel Rotary Engine — Project Rain-Drop Powerplant</div>
+    <p>Named Fog — hiding its true intentions behind a mist. Kiri is a ground-up custom Wankel rotary engine built on RX-7 proportions, developed entirely through 3D printed iterations. The powerplant for Project Rain-Drop and the foundation for everything that follows.</p>
+  </div>
+
+  <!-- SPECS BAR -->
+  <div class="specs-bar">
+    <div class="spec-item">
+      <div class="spec-value">28mm</div>
+      <div class="spec-label">Rotor Radius (R)</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-value">4mm</div>
+      <div class="spec-label">Eccentricity (e)</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-value">K7</div>
+      <div class="spec-label">RX-7 Ratio</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-value">64mm</div>
+      <div class="spec-label">Housing Width</div>
+    </div>
+    <div class="spec-item">
+      <div class="spec-value">V1.45</div>
+      <div class="spec-label">Current Version</div>
+    </div>
+  </div>
+
+  <!-- ITERATIONS -->
+  <section class="content-section fade-in">
+    <div class="section-label">Development History</div>
+    <h2 class="section-title">Iteration Log</h2>
+    <div class="iterations">
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.0</div>
+        <div>
+          <div class="iteration-tag tag-complete">Complete</div>
+          <div class="iteration-title">First Print — First Lessons</div>
+          <p class="iteration-desc">First geometry printed. Housing confirmed printable. Gears too small, caused binding. Rotor geometry mismatched. Motion test: 2/10. Confirmed the geometry was printable and identified where to improve.</p>
+          <a href="Kiri_V1.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">2<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.1</div>
+        <div>
+          <div class="iteration-tag tag-complete">Complete</div>
+          <div class="iteration-title">Isolating the Problem</div>
+          <p class="iteration-desc">Gears removed to test rotor clearance independently. Confirmed rotor and housing were fundamentally different geometries — not built from the same mathematical foundation. Required full redesign.</p>
+          <a href="Kiri_V1.1.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">3<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.2</div>
+        <div>
+          <div class="iteration-tag tag-complete">Complete</div>
+          <div class="iteration-title">Redesign — First Working Rotation</div>
+          <p class="iteration-desc">Full rotor redesign. RX-7 K=7 proportions locked in. R=28mm, e=4mm. First successful rotation and full orbit achieved. Smoothness 7/10. Rotor drifts without gears confirmed.</p>
+          <a href="Kiri_V1.2.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">7<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.25</div>
+        <div>
+          <div class="iteration-tag tag-complete">Complete</div>
+          <div class="iteration-title">Correct Parametric Equation + Gears</div>
+          <p class="iteration-desc">Full redo using corrected parametric equation. Gears introduced for first time — module 0.80, 20/30 tooth, 3:2 ratio. Good mesh, minimal slippage. PLA friction identified as major issue requiring lubrication.</p>
+          <a href="Kiri_V1.25.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">7<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.26</div>
+        <div>
+          <div class="iteration-tag tag-complete">Complete</div>
+          <div class="iteration-title">First Full Assembly — Hand Driven</div>
+          <p class="iteration-desc">Eccentric shaft and hand crank added. First complete mechanical assembly. Rotor tracked epitrochoid path under hand crank power. Kiri moved for the first time. Gear slipping under extreme load noted.</p>
+          <a href="Kiri_V1.26.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">7<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.3</div>
+        <div>
+          <div class="iteration-tag tag-complete">Complete</div>
+          <div class="iteration-title">First Enclosed Assembly</div>
+          <p class="iteration-desc">Filleted edges, cover plate with window, 4-bolt mounting. Silicon grease introduced. Shaft clearance relief added. Smoothness 8/10. Modular design proven — cover reprinted without touching other parts.</p>
+          <a href="Kiri_V1.3.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">8<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.4</div>
+        <div>
+          <div class="iteration-tag tag-complete">Complete</div>
+          <div class="iteration-title">Motorised Drive Introduced</div>
+          <p class="iteration-desc">YM2707 4.5VDC motor, 5:1 external gear reduction. Arduino soft-start code. Battery powered operation. Motor driven rotation confirmed after identifying hand crank obstruction. Silicon grease on all moving parts.</p>
+          <a href="Kiri_V1.4.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">8<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.45</div>
+        <div>
+          <div class="iteration-tag tag-active">Latest</div>
+          <div class="iteration-title">Motor Mount Overhaul — Confirmed Motor Driven Rotation</div>
+          <p class="iteration-desc">Full rear plate 4-screw motor mount. First confirmed sustained motor driven rotation achieved. Eccentric shaft identified for full redesign. Brass inserts required for grub screw. Looked great at speed.</p>
+          <a href="Kiri_V1.45.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">8<span>/10</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LOCKED PARAMETERS -->
+  <section class="content-section fade-in">
+    <div class="section-label">Confirmed Specifications</div>
+    <h2 class="section-title">Locked Parameters</h2>
+    <div class="params-grid">
+      <div class="param-item">
+        <div class="param-name">Generating Radius (R)</div>
+        <div class="param-value">28<span class="param-unit">mm</span></div>
+      </div>
+      <div class="param-item">
+        <div class="param-name">Eccentricity (e)</div>
+        <div class="param-value">4<span class="param-unit">mm</span></div>
+      </div>
+      <div class="param-item">
+        <div class="param-name">K Ratio</div>
+        <div class="param-value">7<span class="param-unit">RX-7</span></div>
+      </div>
+      <div class="param-item">
+        <div class="param-name">Housing Width</div>
+        <div class="param-value">64<span class="param-unit">mm</span></div>
+      </div>
+      <div class="param-item">
+        <div class="param-name">Housing Height</div>
+        <div class="param-value">48.7<span class="param-unit">mm</span></div>
+      </div>
+      <div class="param-item">
+        <div class="param-name">Apex Radius</div>
+        <div class="param-value">28<span class="param-unit">mm</span></div>
+      </div>
+      <div class="param-item">
+        <div class="param-name">Gear Module</div>
+        <div class="param-value">0.80</div>
+      </div>
+      <div class="param-item">
+        <div class="param-name">Gear Ratio (Internal)</div>
+        <div class="param-value">3<span class="param-unit">:2</span></div>
+      </div>
+      <div class="param-item">
+        <div class="param-name">Drive Gear Ratio</div>
+        <div class="param-value">5<span class="param-unit">:1</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">SSM<span>.</span></div>
+    <ul class="footer-links">
+      <li><a href="https://twitter.com/SSMEngineering" target="_blank">X / Twitter</a></li>
+      <li><a href="https://www.instagram.com/ssmengernering/" target="_blank">Instagram</a></li>
+      <li><a href="https://www.youtube.com/@SilverSpeedMotors" target="_blank">YouTube</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 SSM Engineering — New Zealand</div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SSM Engineering</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black:   #0a0a0a;
+      --dark:    #111111;
+      --card:    #161616;
+      --border:  #222222;
+      --brass:   #b8974a;
+      --brass2:  #d4b265;
+      --white:   #f0f0f0;
+      --grey:    #888888;
+      --light:   #cccccc;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(184,151,74,0.15);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.15em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--brass); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    nav ul a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover { color: var(--brass); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: 'SSM';
+      position: absolute;
+      right: -2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 40vw;
+      color: rgba(255,255,255,0.02);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--brass);
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 10vw, 10rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      margin-bottom: 2rem;
+      max-width: 800px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--brass);
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--light);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .btn-primary {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--brass);
+      padding: 1rem 2.5rem;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    }
+
+    .btn-primary:hover {
+      background: var(--brass2);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .btn-secondary:hover { color: var(--white); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 3rem;
+      left: 4rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hero-scroll::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--brass), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollLine {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* ── SECTION COMMON ── */
+    section {
+      padding: 8rem 4rem;
+    }
+
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: var(--brass);
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      letter-spacing: 0.03em;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .about-text p {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--light);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .stat {
+      background: var(--card);
+      padding: 2.5rem;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .stat:hover { border-color: var(--brass); }
+
+    .stat::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--brass);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .stat:hover::before { opacity: 1; }
+
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      color: var(--brass);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    /* ── PROJECTS ── */
+    .projects { border-top: 1px solid var(--border); }
+
+    .projects-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 3rem;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+      display: block;
+    }
+
+    .project-card:hover {
+      border-color: var(--brass);
+      transform: translateY(-4px);
+    }
+
+    .project-card::after {
+      content: '→';
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      font-size: 1.5rem;
+      color: var(--brass);
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .project-card:hover::after {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .project-status {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .status-active .status-dot {
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+      animation: pulse 2s infinite;
+    }
+
+    .status-development .status-dot { background: var(--brass); }
+    .status-concept .status-dot { background: var(--grey); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .status-active { color: #4ade80; }
+    .status-development { color: var(--brass); }
+    .status-concept { color: var(--grey); }
+
+    .project-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-subtitle {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 1.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--grey);
+      line-height: 1.7;
+    }
+
+    /* ── ROADMAP ── */
+    .roadmap { border-top: 1px solid var(--border); }
+
+    .roadmap-list {
+      margin-top: 4rem;
+      position: relative;
+    }
+
+    .roadmap-list::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--brass), transparent);
+    }
+
+    .roadmap-item {
+      padding: 2rem 0 2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .roadmap-item::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 2.5rem;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--brass);
+      border: 2px solid var(--black);
+    }
+
+    .roadmap-item.active::before {
+      background: #4ade80;
+      box-shadow: 0 0 12px #4ade80;
+    }
+
+    .roadmap-item.future::before {
+      background: var(--border);
+    }
+
+    .roadmap-stage {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--grey);
+      padding-top: 0.2rem;
+    }
+
+    .roadmap-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .roadmap-desc {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--grey);
+      line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.1em;
+      color: var(--white);
+    }
+
+    .footer-logo span { color: var(--brass); }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--brass); }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--border);
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── BRASS DIVIDER ── */
+    .brass-line {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(to right, var(--brass), transparent);
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">SSM<span>.</span></a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="kiri.html">Kiri</a></li>
+      <li><a href="rata.html">RATA</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">SSM Engineering — New Zealand</div>
+    <h1>All Roads<br/>To <em>Ryujin.</em></h1>
+    <p>One engineer. One mission. From a 3D printed rotary engine in a bedroom to a hydrogen hypercar — every project, every iteration, every failure is a step on the same road.</p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">View Projects</a>
+      <a href="#roadmap" class="btn-secondary">See the Roadmap →</a>
+    </div>
+    <div class="hero-scroll">Scroll</div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about fade-in">
+      <div class="about-text">
+        <div class="section-label">About SSM Engineering</div>
+        <h2 class="section-title">Built From Scratch.<br/>No Shortcuts.</h2>
+        <div class="brass-line"></div>
+        <p>SSM Engineering — Silver Speed Motors — is a one-man engineering company based in New Zealand, founded on the belief that ambition and a 3D printer can take you further than a degree and a budget ever could.</p>
+        <p>What started as a name in an automotive game became a real engineering company with real projects, real documentation, and a real end goal: Ryujin — a 4 rotor hybrid hydrogen hypercar.</p>
+        <p>Every component is designed, tested, iterated and documented. From the first failed print to the working prototype — the process is the product.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat">
+          <div class="stat-number">V1.45</div>
+          <div class="stat-label">Kiri Current Version</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">11+</div>
+          <div class="stat-label">Iterations Completed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Active Sub-Projects</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">1</div>
+          <div class="stat-label">Engineer Behind It All</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="projects fade-in">
+      <div class="projects-header">
+        <div>
+          <div class="section-label">Active Development</div>
+          <h2 class="section-title">The Projects</h2>
+        </div>
+      </div>
+      <div class="projects-grid">
+
+        <a href="kiri.html" class="project-card">
+          <div class="project-status status-active">
+            <span class="status-dot"></span> Active Development
+          </div>
+          <div class="project-name">Kiri</div>
+          <div class="project-subtitle">Custom Wankel Rotary Engine</div>
+          <p class="project-desc">A ground-up custom rotary engine built on RX-7 proportions. Currently at V1.45 with motor driven rotation confirmed. The powerplant for Project Rain-Drop.</p>
+        </a>
+
+        <a href="rata.html" class="project-card">
+          <div class="project-status status-development">
+            <span class="status-dot"></span> In Development
+          </div>
+          <div class="project-name">RATA</div>
+          <div class="project-subtitle">Homemade Wind Tunnel</div>
+          <p class="project-desc">Rise Against The Air. A 3D printed wind tunnel for aerodynamic development of Project Rain-Drop. Venturi entry and flow straightener designed.</p>
+        </a>
+
+        <a href="raindrop.html" class="project-card">
+          <div class="project-status status-development">
+            <span class="status-dot"></span> In Development
+          </div>
+          <div class="project-name">Rain-Drop</div>
+          <div class="project-subtitle">RC Land Speed Record Attempt</div>
+          <p class="project-desc">The main event. A custom chassis, custom rotary engine, and an attempt at the gas-powered RC car land speed record. The raindrop is the embodiment of aerodynamics.</p>
+        </a>
+
+        <a href="mist.html" class="project-card">
+          <div class="project-status status-concept">
+            <span class="status-dot"></span> Concept
+          </div>
+          <div class="project-name">Mist</div>
+          <div class="project-subtitle">First Real World Prototype</div>
+          <p class="project-desc">The first functional prototype for Project Rain-Drop. Not built to break records, but to show what Rain can be without fully embodying its true nature.</p>
+        </a>
+
+        <a href="kuraokami.html" class="project-card">
+          <div class="project-status status-concept">
+            <span class="status-dot"></span> Future
+          </div>
+          <div class="project-name">Kuraokami</div>
+          <div class="project-subtitle">Dragon God of Rain</div>
+          <p class="project-desc">The final form of Project Rain-Drop. Embodying every learning experience before it to take on the gas-powered RC car land speed record.</p>
+        </a>
+
+        <a href="raijin.html" class="project-card">
+          <div class="project-status status-concept">
+            <span class="status-dot"></span> Future
+          </div>
+          <div class="project-name">Raijin</div>
+          <div class="project-subtitle">1-2 Rotor Motorcycle</div>
+          <p class="project-desc">A full scale rotary powered motorcycle. Proof that SSM Engineering can build at scale. The bridge between RC engineering and Ryujin.</p>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section id="roadmap">
+    <div class="roadmap fade-in">
+      <div class="section-label">The Long Game</div>
+      <h2 class="section-title">Road to Ryujin</h2>
+      <div class="roadmap-list">
+
+        <div class="roadmap-item active">
+          <div class="roadmap-stage">Stage 01 — Active</div>
+          <div>
+            <div class="roadmap-title">Kiri + Project Rain-Drop</div>
+            <p class="roadmap-desc">Custom rotary engine development and RC land speed record attempt. Building the knowledge base and proving the concept.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item">
+          <div class="roadmap-stage">Stage 02</div>
+          <div>
+            <div class="roadmap-title">Kuraokami — The Record</div>
+            <p class="roadmap-desc">The final Rain-Drop prototype. Gas powered. Record attempt. Every lesson from every iteration applied.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item future">
+          <div class="roadmap-stage">Stage 03</div>
+          <div>
+            <div class="roadmap-title">Raijin — The Motorcycle</div>
+            <p class="roadmap-desc">1-2 rotor rotary motorcycle. First full scale build. Proving SSM Engineering can operate beyond RC scale.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item future">
+          <div class="roadmap-stage">Stage 04</div>
+          <div>
+            <div class="roadmap-title">Kurohagane — Black Steel</div>
+            <p class="roadmap-desc">A modern RX-7 FC inspired street car with a 2 rotor engine meeting modern emissions standards. The final proof before the hypercar.</p>
+          </div>
+        </div>
+
+        <div class="roadmap-item future">
+          <div class="roadmap-stage">Stage 05 — The End Goal</div>
+          <div>
+            <div class="roadmap-title">Ryujin — The Hypercar</div>
+            <p class="roadmap-desc">4 rotor hybrid hydrogen hypercar. GT1 inspired. Carbon monocoque. Four drive modes. The reason everything else exists.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">SSM<span>.</span></div>
+    <ul class="footer-links">
+      <li><a href="https://twitter.com/SSMEngineering" target="_blank">X / Twitter</a></li>
+      <li><a href="https://www.instagram.com/ssmengernering/" target="_blank">Instagram</a></li>
+      <li><a href="https://www.youtube.com/@SilverSpeedMotors" target="_blank">YouTube</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 SSM Engineering — New Zealand</div>
+  </footer>
+
+  <script>
+    // Fade in on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

@@ -567,6 +567,114 @@
       background: linear-gradient(to right, var(--brass), transparent);
       margin: 2rem 0;
     }
+
+    /* ── MOBILE RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav {
+        padding: 1rem 1.5rem;
+      }
+
+      nav ul {
+        display: none;
+      }
+
+      .hero {
+        padding: 0 1.5rem;
+        min-height: 100svh;
+      }
+
+      .hero h1 {
+        font-size: clamp(3rem, 15vw, 5rem);
+      }
+
+      .hero p {
+        font-size: 0.95rem;
+      }
+
+      .hero-cta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .hero-scroll {
+        left: 1.5rem;
+      }
+
+      .hero::before {
+        font-size: 50vw;
+        right: -1rem;
+      }
+
+      section {
+        padding: 4rem 1.5rem;
+      }
+
+      .about {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .about-stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .projects-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .roadmap-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 1.5rem 0 1.5rem 2.5rem;
+      }
+
+      .specs-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .params-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      footer {
+        padding: 2rem 1.5rem;
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .about-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .specs-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .params-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stat {
+        padding: 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -608,7 +716,7 @@
       </div>
       <div class="about-stats">
         <div class="stat">
-          <div class="stat-number">V1.45</div>
+          <div class="stat-number">V1.55</div>
           <div class="stat-label">Kiri Current Version</div>
         </div>
         <div class="stat">
@@ -644,7 +752,7 @@
           </div>
           <div class="project-name">Kiri</div>
           <div class="project-subtitle">Custom Wankel Rotary Engine</div>
-          <p class="project-desc">A ground-up custom rotary engine built on RX-7 proportions. Currently at V1.45 with motor driven rotation confirmed. The powerplant for Project Rain-Drop.</p>
+          <p class="project-desc">A ground-up custom rotary engine built on RX-7 proportions. Currently at V1.55 with bearing supported motor driven rotation confirmed. The powerplant for Project Rain-Drop.</p>
         </a>
 
         <a href="rata.html" class="project-card">

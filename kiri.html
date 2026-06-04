@@ -403,6 +403,86 @@
     }
 
     .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── MOBILE RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav {
+        padding: 1rem 1.5rem;
+      }
+
+      nav ul {
+        display: none;
+      }
+
+      .page-hero {
+        padding: 8rem 1.5rem 3rem;
+      }
+
+      .page-hero h1 {
+        font-size: clamp(3rem, 15vw, 5rem);
+      }
+
+      .page-hero p {
+        font-size: 0.95rem;
+      }
+
+      .specs-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .spec-item {
+        padding: 1.2rem;
+      }
+
+      .content-section {
+        padding: 3rem 1.5rem;
+      }
+
+      .iteration-card {
+        grid-template-columns: 80px 1fr;
+        gap: 1rem;
+        padding: 1.5rem;
+      }
+
+      .iteration-rating {
+        display: none;
+      }
+
+      .params-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      footer {
+        padding: 2rem 1.5rem;
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .specs-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .iteration-card {
+        grid-template-columns: 1fr;
+      }
+
+      .iteration-version {
+        font-size: 1.8rem;
+      }
+
+      .params-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -446,7 +526,7 @@
       <div class="spec-label">Housing Width</div>
     </div>
     <div class="spec-item">
-      <div class="spec-value">V1.45</div>
+      <div class="spec-value">V1.55</div>
       <div class="spec-label">Current Version</div>
     </div>
   </div>
@@ -537,12 +617,56 @@
       <div class="iteration-card">
         <div class="iteration-version">V1.45</div>
         <div>
-          <div class="iteration-tag tag-active">Latest</div>
+          <div class="iteration-tag tag-complete">Complete</div>
           <div class="iteration-title">Motor Mount Overhaul — Confirmed Motor Driven Rotation</div>
           <p class="iteration-desc">Full rear plate 4-screw motor mount. First confirmed sustained motor driven rotation achieved. Eccentric shaft identified for full redesign. Brass inserts required for grub screw. Looked great at speed.</p>
           <a href="Kiri_V1.45.pdf" target="_blank" class="report-link">↗ View Report</a>
         </div>
         <div class="iteration-rating">8<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.5</div>
+        <div>
+          <div class="iteration-tag tag-complete">Complete</div>
+          <div class="iteration-title">Bearing Integration — Shaft Redesign</div>
+          <p class="iteration-desc">Full eccentric shaft redesign with bearing pockets in front cover and rear plate. Shaft printed vertically — wrong orientation, snapped under hand load. Bearing bore undersized due to elephant foot. Both issues identified and fixed for V1.51.</p>
+          <a href="Kiri_V1.5_to_V1.52.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">5<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.51</div>
+        <div>
+          <div class="iteration-tag tag-complete">Complete</div>
+          <div class="iteration-title">Correct Shaft Orientation Confirmed</div>
+          <p class="iteration-desc">Shaft reprinted horizontal — dramatically stronger. Front joiner geometry failed under load. Motor mount gear clearance reintroduced when housing thickness changed. Shaft orientation locked in as horizontal permanently.</p>
+          <a href="Kiri_V1.5_to_V1.52.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">5<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.52</div>
+        <div>
+          <div class="iteration-tag tag-complete">Complete</div>
+          <div class="iteration-title">608RS Bearing in Rotor — 90% Friction Reduction</div>
+          <p class="iteration-desc">Single most impactful improvement of the V1 series. 608RS ball bearing pressed into rotor central bore. Rotor went from high PLA-on-PLA friction to spinning almost completely freely. Estimated 90% friction reduction. Bearing locked in as permanent feature.</p>
+          <a href="Kiri_V1.5_to_V1.52.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">7<span>/10</span></div>
+      </div>
+
+      <div class="iteration-card">
+        <div class="iteration-version">V1.55</div>
+        <div>
+          <div class="iteration-tag tag-active">Latest</div>
+          <div class="iteration-title">First Bearing-Supported Motor Driven Rotation</div>
+          <p class="iteration-desc">Motor driven rotation achieved for 2-3 seconds before motor gear slipped off smooth shaft. Root causes identified — motor gear angular drift, eccentric shaft gear and rear section as two separate pieces causing misalignment, front cover rubbing rotor. Full mechanical redesign initiated for V1.6.</p>
+          <a href="Kiri_V1.55.pdf" target="_blank" class="report-link">↗ View Report</a>
+        </div>
+        <div class="iteration-rating">6<span>/10</span></div>
       </div>
 
     </div>
